@@ -4,7 +4,7 @@ import { Hono } from "hono";
 import { serveStatic } from "hono/bun";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { TodosRouter } from "./routes/todos";
+import { todosRouter } from "./routes/todos";
 
 
 
@@ -24,7 +24,7 @@ app.get("/*", async (c) => {
         console.log(error)
     }
 })
-
+export type ApiRoutes = typeof apiRoutes
 export default app;
 
 const PORT = parseInt(process.env.PORT!) || 3333;

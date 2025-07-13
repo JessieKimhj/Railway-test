@@ -14,6 +14,7 @@ export const todosRouter = new Hono().post(
     ),
 async (c)=> {
  const insertValues = c.req.valid("json");
+ console.log(insertValues)
  const { error:todoInsertError, result:todoInsertResult} = 
  await mightFail(db.insert(todosTable).values(insertValues).returning())
  if (todoInsertError){
@@ -24,4 +25,17 @@ async (c)=> {
  }
  return c.json({todo: todoInsertResult[0]});
 }
+).get(
+    "/",
+    async (c) => {
+        const { error:todosQueryError, result:todosQueryResult} =
+        await mightFail(db.select().from(todosTable))
+        if (todosQueryError){
+            throw new HTTPException(500, {
+                message: "Failed to select todos",
+                cause: todosQueryError,
+            })
+        }
+        return c.json({todos: todosQueryResult}, 200)
+    }
 )
